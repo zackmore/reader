@@ -12,8 +12,6 @@ from tornado.options import define, options
 define('port', default=8000, help='run on the given port', type=int)
 
 import db
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 
 
 class Application(tornado.web.Application):
@@ -30,9 +28,7 @@ class Application(tornado.web.Application):
             debug=True
         )
         tornado.web.Application.__init__(self, handlers, **settings)
-
-        Session = sessionmaker(bind=db.engine)
-        self.db = Session()
+        self.db = db.make_session()
 
 
 class BaseHandler(tornado.web.RequestHandler):

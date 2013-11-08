@@ -5,6 +5,7 @@ import os.path
 from sqlalchemy import create_engine, Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
 engine = create_engine('sqlite:///db/app.db')
 Base = declarative_base()
@@ -16,12 +17,14 @@ class Feed(Base):
     name = Column(String, default='Unknown')
     url = Column(String, nullable=False)
     last_update_time = Column(String)
+    last_entry_code = Column(String)
     items = relationship('Item', backref='feed')
 
-    def __init__(self, name, url, last_update_time):
+    def __init__(self, name, url, last_update_time, last_entry_code):
         self.name = name
         self.url = url
         self.last_update_time = last_update_time
+        self.last_entry_code = last_entry_code
 
     def __repr__(self):
         return '<Feed %s[%s]>' % (self.name, self.url)
@@ -65,3 +68,8 @@ class StarredItem(Base):
 
 
 Base.metadata.create_all(engine)
+
+def make_session():
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    return session
