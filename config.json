@@ -1,10 +1,7 @@
 {
-    'Global': {
-        'reader_name':      'My Morning Reader',
-        'version':          '0.1'
+    "Global":{
+        "reader_name":"MyMorningReader",
+        "version":"0.1"
     },
-    'feedfetcher': {
-        //'threads':          1,
-        'fetch_frequency':  ''
-    }
+    "feedfetcher":{"fetch_frequency":""}
 }
