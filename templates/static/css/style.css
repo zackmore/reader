@@ -147,7 +147,7 @@ textarea {
     top: 0;
     right: 0;
     bottom: 0;
-    z-index: 997px;
+    z-index: 997;
     display: none;
 }
 
@@ -167,36 +167,47 @@ textarea {
     color: #fff;
     font-family: Helvetica, Arial, sans-serif;
     padding-top: 200px;
+    transition: all .2s ease-in-out;
     display: none;
+    opacity: 0;
 }
 
 #loading.show{
     display: block;
 }
 
+#loading.animate{
+    opacity: 1;
+}
+
 #quick-btn{
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
-    width: 38px;
+    margin: 2em 0;
 }
 
 #quick-btn a{
     display: block;
-    height: 38px;
-    line-height: 38px;
+    width: 120px;
+    height: 2.92em;
+    line-height: 2.92;
+    padding: 0 .8em;
     text-align: center;
-    background: #283339;
-    color: #b55e54;
-    opacity: .8;
+    color: #fff;
+    background: #b55e54;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: .8125em;
 }
 
-#quick-btn a:first-child{
-    border-radius: 5px 5px 0 0;
+#quick-btn a i{
+    margin-right: 5px;
 }
 
-#quick-btn a:last-child{
-    border-radius: 0 0 5px 5px;
+#quick-btn .unread{
+    float: left;
+}
+
+#quick-btn .star{
+    float: right;
 }
 
 header{
@@ -253,7 +264,6 @@ header a{
     background: #283339;
     top: 40px;
     left: -280px;
-    /*left: 0;*/
     bottom: 0;
     overflow: auto;
     transition: all .2s ease-in-out;
@@ -271,6 +281,9 @@ header a{
     font-family: Helvetica, Arial, sans-serif;
     line-height: 2.75;
     border-top: 1px solid #b55e54;
+    color: #fff;
+    display: block;
+    position: relative;
 }
 
 #sidebar h2 a{
@@ -279,7 +292,15 @@ header a{
     display: block;
 }
 
-#sidebar i{
+#sidebar h2 a.active{
+    background: #b55e54;
+}
+
+#sidebar h2 a span{
+    text-decoration: underline;
+}
+
+#sidebar h2 i{
     color: #fff;
     margin: 0 10px;
 }
@@ -288,6 +309,11 @@ header a{
     margin: 0 12px;
 }
 
+#sidebar input{
+    margin-bottom: .5em;
+}
+
+#sidebar input[type="password"],
 #sidebar input[type="text"]{
     height: 2.125em;
     line-height: 1;
@@ -296,18 +322,26 @@ header a{
     padding: 0 5px;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+    font-family: Helvetica, Arial, sans-serif;
 }
 
 #sidebar input[type="submit"]{
     float: right;
     padding: 0 10px;
-    margin: 10px 0 20px;
+    margin: 1.5em 0 1em;
     height: 2.125em;
     line-height: 2.125;
     font: 1em/1 Helvetica, Arial, sans-serif;
     color: #fff;
     background: #b55e54;
     border-radius: 5px;
+}
+
+#sidebar label{
+    border: 0;
+    color: #999;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: .8125em;
 }
 
 #feedlist{
@@ -348,6 +382,15 @@ header a{
 #items-list li{
     border-bottom: 1px solid #efefef;
     padding-bottom: .75em;
+}
+
+#items-list .detail{
+    text-decoration: none;
+}
+
+#items-list .detail:hover h3,
+#items-list .detail:hover p{
+    color: #000;
 }
 
 #items-list h3{
@@ -406,10 +449,19 @@ header a{
     text-decoration: none;
     height: 2.5em;
     line-height: 2.5;
+    border-radius: 5px;
 }
 
 #feed-content{
-    margin: 0 10px 120px;
+    background: #fff;
+    position: absolute;
+    top: 40px;
+    padding: 0 10px;
+    display: none;
+}
+
+#feed-content.show{
+    display: block;
 }
 
 #feed-content > h3{
@@ -441,8 +493,65 @@ header a{
     max-width: 100%;
 }
 
-@media only screen and (min-width: 35em) {
-    /* Style adjustments for viewports that meet the condition */
+@media only screen and (min-width: 840px) {
+
+header{
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    text-align: left;
+}
+
+#logo{
+    text-indent: 12px;
+}
+
+#crumb{
+    display: none;
+}
+
+.sidebar-btn{
+    display: none;
+}
+
+#sidebar{
+    left: 0;
+}
+
+#content{
+    margin: 80px 0 0 320px;
+    max-width: 32em;
+}
+
+#items-list{
+    padding: 0;
+}
+
+#items-list b a{
+    font-size: .875em;
+}
+
+#more-btn{
+    margin-left: 0;
+    margin-right: 0;
+}
+
+#feed-content{
+    max-width: 32em;
+    padding: 0 0 2em;
+    position: relative;
+}
+
+#feed-content > div{
+    line-height: 1.9;
+}
+
+#quick-btn a{
+    font-size: 1em;
+    min-width: 180px;
+}
+
 }
 
 @media print,
