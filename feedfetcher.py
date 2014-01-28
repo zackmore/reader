@@ -6,7 +6,6 @@ import feedparser
 import hashlib
 import model
 
-
 import pdb
 
 
@@ -16,10 +15,10 @@ class Dumper(object):
 
     def dump_feed(self):
         self.feed = model.Feed(
-                feedname=self.data.feed.title.encode('utf-8'),
-                feedurl=self.data.feed.link.encode('utf-8'),
-                feedpubdate=self.data.feed.get('published_parsed',
-                                                'updated_parsed').encode('utf-8')
+                feedname=self.data.feed.title,
+                feedurl=self.data.feed.link,
+                #feedpubdate=self.data.feed.get('published_parsed',
+                                                #'updated_parsed')
                 )
 
     def dump_items(self):
@@ -34,12 +33,12 @@ class Dumper(object):
 
 
             item = model.Item(
-                        url=url.encode('utf-8'),
-                        pubdate=pubdate.encode('utf-8'),
-                        title=title.encode('utf-8'),
-                        snippet=snippet.encode('utf-8'),
-                        content=content.encode('utf-8'),
-                        guid=guid.encode('utf-8')
+                        url=url,
+                        pubdate=pubdate,
+                        title=title,
+                        snippet=snippet,
+                        content=content,
+                        guid=guid
                     )
             self.feed.items.append(item)
 
