@@ -1,4 +1,5 @@
 $(function(){
+    // Visual
     // Sidebar show and hide
     $('.sidebar-btn').on('click', function(e){
         e.preventDefault();
@@ -19,4 +20,5 @@ $(function(){
         }
     });
 
+    // Functional
 });

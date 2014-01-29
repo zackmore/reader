@@ -34,6 +34,17 @@
         <h2><a href="#"><i class="fa fa-star fa-fw"></i>Stars</a></h2>
         <h2><i class="fa fa-rss fa-fw"></i>All</h2>
         <ul id="feedlist">
+            {% for feed in all_feeds %}
+            <li>
+                <a href="/feed/{{ feed.feedid }}">
+                    {{ feed.feedname }}
+                    {% if feed.itemunread is not None %}
+                    <b>({{ feed.itemunread }})</b>
+                    {% end %}
+                </a>
+            </li>
+            {% end %}
+            <!--
             <li><a href="#">虎嗅网<b>(10)</b></a></li>
             <li><a href="#">新浪体育<b>(20)</b></a></li>
             <li><a href="#">Mobile Tech<b>(11)</b></a></li>
@@ -43,11 +54,22 @@
             <li><a href="#">SkateBoarding<b>(1000+)</b></a></li>
             <li><a href="#" class="active">Cnbeta.com<b>(55)</b></a></li>
             <li><a href="#">白板报<b>(20)</b></a></li>
+            -->
         </ul>
     </aside>
     <div id="content">
         <!-- feed list items start -->
         <ul id="items-list">
+            {% for item in newest_items %}
+            <li>
+            <a href="/item/{{ item.itemid }}" class="detail">
+                <h3>{{ item.title }}</h3>
+                <p>{{ item.snippet }}</p>
+            </a>
+            <span>{{ item.pubdate }} <a href="/feed/{{ item.feedid }}">feedname</a></span>
+            </li>
+            {% end %}
+            <!--
         	<li>
                 <a href="#" class="detail">
                     <h3>格瓦拉神话背后的黑色真相</h3>
@@ -70,6 +92,7 @@
                     <a href="#" class="star"><i class="fa fa-star-o fa-fw"></i>Star</a>
                 </b>
         	</li>
+            -->
         </ul>
         <a href="#" id="more-btn"><i class="fa fa-angle-double-down fa-fw"></i>View more</a>
         <!-- feed list items end -->

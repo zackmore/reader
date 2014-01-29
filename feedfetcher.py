@@ -4,7 +4,10 @@ import os.path
 import requests
 import feedparser
 import hashlib
-import model
+
+from sqlalchemy.orm import scoped_session, sessionmaker
+
+from model import *
 
 import pdb
 
@@ -12,6 +15,7 @@ import pdb
 class Dumper(object):
     def __init__(self, feed_url):
         self.data = feedparser.parse(feed_url)
+        self.session = scoped_session(sessionmaker(bind=engine))
 
     def dump_feed(self):
         self.feed = model.Feed(
@@ -31,7 +35,6 @@ class Dumper(object):
             content = entry.get('content', 'description')
             guid = hashlib.md5(title+url).hexdigest()
 
-
             item = model.Item(
                         url=url,
                         pubdate=pubdate,
@@ -43,8 +46,11 @@ class Dumper(object):
             self.feed.items.append(item)
 
     def save_to_db(self):
-        model.session.add(self.feed)
-        model.session.commit()
+        self.session.add(self.feed)
+        self.session.commit()
+
+    def check_pubdate(self):
+        pass
 
 
 if __name__ == '__main__':
