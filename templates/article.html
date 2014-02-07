@@ -3,6 +3,9 @@
 <div id="feed-content">
     <h3>{{ article.title }}<a target="_blank" href="{{ article.url }}"><i class="fa fa-share-square-o"></i></a></h3>
     <span>{{ article.pubdate }}</span>
-    <div>{{ article.content }}</div>
+    <div>
+        {% autoescape None %}
+        {{ article.content }}
+    </div>
 </div>
 {% end %}

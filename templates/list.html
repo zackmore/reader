@@ -5,7 +5,7 @@
     <li>
     <a href="/item/{{ item.itemid }}" class="detail">
         <h3>{{ item.title }}</h3>
-        <p>{{ item.snippet }}</p>
+        <p>{{ item.snippet[:50] }}...</p>
     </a>
     <span>{{ item.pubdate }} <a href="/feed/{{ item.feedid }}">{{ item.feed.feedname }}</a></span>
     </li>
@@ -24,5 +24,9 @@
     </li>
     -->
 </ul>
-<a href="/?more={{ next_step }}" id="more-btn"><i class="fa fa-angle-double-down fa-fw"></i>View more</a>
+{% if not flag_no_more %}
+<a href="?more={{ next_step }}" id="more-btn"><i class="fa fa-angle-double-down fa-fw"></i>View more</a>
+{% else %}
+<a href="?more={{ next_step-2 }}" id="more-btn" class="no-more"><i class="fa fa-arrow-left fa-fw"></i>No more, go back</a>
+{% end %}
 {% end %}

@@ -344,6 +344,10 @@ header a{
     font-size: .8125em;
 }
 
+#content{
+    padding-bottom: 40px;
+}
+
 #feedlist{
     margin-bottom: 50px;
 }
@@ -381,7 +385,7 @@ header a{
 
 #items-list li{
     border-bottom: 1px solid #efefef;
-    padding-bottom: .75em;
+    padding-bottom: 1.5em;
 }
 
 #items-list .detail{
@@ -394,8 +398,8 @@ header a{
 }
 
 #items-list h3{
-    margin: .5em 0 0;
-    font: 1.5em/1.5 Helvetica, Arial, sans-serif;
+    margin: 1em 0 .5em;
+    font: 1.5em/1.2 Helvetica, Arial, sans-serif;
     color: #333;
 }
 
@@ -408,6 +412,13 @@ header a{
 #items-list span{
     color: #b3b3b3;
     font-size: .75em;
+}
+
+#items-list span a{
+    color: #b3b3b3;
+    font-weight: bold;
+    text-decoration: none;
+    margin-left: .5em;
 }
 
 #items-list b{
@@ -452,6 +463,10 @@ header a{
     border-radius: 5px;
 }
 
+#more-btn.no-more{
+    background: #b3b3b3;
+}
+
 #feed-content{
     background: #fff;
     position: absolute;
@@ -464,7 +479,7 @@ header a{
 }
 
 #feed-content > h3{
-    margin: .75em 0 .5em;
+    margin: .5em 0;
     font: 1.5em/1.2 Helvetica, Arial, sans-serif;
     color: #333;
 }
@@ -490,6 +505,10 @@ header a{
     display: block;
     margin: .5em 0;
     max-width: 100%;
+}
+
+#feed-content > div a{
+    color: #b55e54;
 }
 
 @media only screen and (min-width: 840px) {
@@ -539,11 +558,11 @@ header{
 #feed-content{
     max-width: 32em;
     padding: 0 0 2em;
-    position: relative;
+    position: static;
 }
 
 #feed-content > div{
-    line-height: 1.9;
+    line-height: 1.8;
 }
 
 #quick-btn a{

@@ -7,7 +7,7 @@ import tornado.options
 
 from sqlalchemy.orm import scoped_session, sessionmaker
 from model import *
-from helper import *
+import helper
 
 from tornado.options import define, options
 define('port', default=9999, help='run on the given port', type=int)
@@ -45,42 +45,59 @@ class SidebarModule(tornado.web.UIModule):
 
 class MainHandler(BaseHandler):
     def get(self):
-        all_feeds = self.db.query(Feed).order_by(Feed.feedid)
-
         mode = self.get_argument('mode', 'normal')
-        items_step = self.get_argument('more', 0)
+        items_step = int(self.get_argument('more', 0))
+
+        flag_offset = items_step * helper.CONFIG['Global']['more_quantity']
+
         if mode == 'all':
             newest_items = self.db.query(Item).\
                             order_by(Item.pubdate.desc()).\
-                            offset(items_step*
-                                CONFIG['Global']['more_quantity']).\
-                            limit(CONFIG['Global']['more_quantity'])
+                            offset(flag_offset).\
+                            limit(helper.CONFIG['Global']['more_quantity'])
+            items_quantity = self.db.query(Item).count()
         else:
             newest_items = self.db.query(Item).\
-                            filter(Item.readed==False).\
+                            filter(Item.readed==0).\
                             order_by(Item.pubdate.desc()).\
-                            offset(items_step*
-                                CONFIG['Global']['more_quantity']).\
-                            limit(CONFIG['Global']['more_quantity'])
+                            offset(flag_offset).\
+                            limit(helper.CONFIG['Global']['more_quantity'])
+            items_quantity = self.db.query(Item).filter(Item.readed==0).count()
+
         next_step = int(items_step) + 1
 
+        if items_quantity - flag_offset <= 10:
+            flag_no_more = True
+        else:
+            flag_no_more = False
+
         self.render('list.html',
-                    all_feeds=all_feeds,
                     newest_items=newest_items,
-                    next_step=next_step)
+                    next_step=next_step,
+                    flag_no_more=flag_no_more)
 
 
 class FeedHandler(BaseHandler):
     def get(self, feedid):
-        items_step = self.get_argument('more', 0)
+        items_step = int(self.get_argument('more', 0))
+        flag_offset = items_step * helper.CONFIG['Global']['more_quantity']
+
         items = self.db.query(Item).filter_by(feedid=feedid).\
                 order_by(Item.pubdate.desc()).\
-                offset(items_step*CONFIG['Global']['more_quantity']).\
-                limit(CONFIG['Global']['more_quantity'])
+                offset(items_step*helper.CONFIG['Global']['more_quantity']).\
+                limit(helper.CONFIG['Global']['more_quantity'])
+
+        items_quantity = self.db.query(Item).filter(Item.readed==0).count()
+
         next_step = int(items_step) + 1
 
+        if items_quantity - flag_offset <= 10:
+            flag_no_more = True
+        else:
+            flag_no_more = False
+
         self.render('list.html', newest_items=items,
-                    next_step=next_step)
+                    next_step=next_step, flag_no_more=flag_no_more)
 
 
 class ItemHandler(BaseHandler):
