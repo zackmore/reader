@@ -69,4 +69,23 @@ if __name__ == '__main__':
 
     feed1 = Feed(feedname=u'虎嗅网', feedurl=u'http://huxiu.com/feed')
     feed2 = Feed(feedname=u'白板报', feedurl=u'http://www.baibanbao.net/feed')
+
+    feed1_item1 = Item(feedid=1,
+                        url=u'http://huxiu.com/article/27421/1.html',
+                        pubdate=u'2014-02-08 06:31',
+                        title=u'解剖Elon Musk的“黑洞型”营销',
+                        snippet=u'好多年前，当科幻片还没今天这么多的时候……',
+                        content=u'具体内容')
+    feed1_item2 = Item(feedid=1,
+                        url=u'http://huxiu.com/article/27421/2.html',
+                        pubdate=u'2014-02-08 05:31',
+                        title=u'解剖Elon Musk的“黑洞型”营销2',
+                        snippet=u'好多年前，当科幻片还没今天这么多的时候……',
+                        content=u'具体内容2')
+    feed1.items.append(feed1_item1)
+    feed1.items.append(feed1_item2)
+
+    session.add_all([feed1, feed2])
+    session.commit()
+
     pdb.set_trace()

@@ -457,7 +457,6 @@ header a{
     position: absolute;
     top: 40px;
     padding: 0 10px;
-    display: none;
 }
 
 #feed-content.show{
