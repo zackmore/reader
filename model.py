@@ -3,6 +3,8 @@
 import pdb
 import os.path
 
+from helper import *
+
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -19,7 +21,7 @@ class Admin(Base):
     password = Column(String, nullable=False)
 
     def __repr__(self):
-        return '<Admin(username="%s")' % self.username.encode('utf-8')
+        return '<Admin(username="%s")' % self.username
 
 
 class Feed(Base):
@@ -27,15 +29,14 @@ class Feed(Base):
 
     feedid = Column(Integer, primary_key=True)
     feedname = Column(String, nullable=False)
-    feed_sourceurl = Column(String, nullable=False)
-    feed_feedurl = Column(String, nullable=False)
+    sourceurl = Column(String, nullable=False)
+    feedurl = Column(String, nullable=False)
     feedpubdate = Column(String, nullable=True)
-    itemall = Column(Integer)
-    itemunread = Column(Integer)
+    #itemall = Column(Integer)
+    itemunread = Column(Integer, default=0)
 
     def __repr__(self):
-        return '<Feed(feed="%s", url="%s")>' % (self.feedname.encode('utf-8'),
-                                                self.feedurl.encode('utf-8'))
+        return '<Feed(feed="%s", url="%s")>' % (self.feedname, self.feedurl)
 
 
 class Item(Base):
@@ -54,9 +55,9 @@ class Item(Base):
     star = Column(Boolean, default=False)
     guid = Column(String)
 
+
     def __repr__(self):
-        return '<Item(title="%s", feed="%s")' % (self.title.encode('utf-8'),
-                                                self.feed.feedname.encode('utf-8'))
+        return '<Item(title="%s", feed="%s")' % (to_utf8(self.title), to_utf8(self.feed.feedname))
 
 
 db_file_path = 'sqlite:///' + './db/data.sqlite'

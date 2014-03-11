@@ -4,41 +4,51 @@ import os.path
 import requests
 import feedparser
 import hashlib
+import datetime
 import time
 
 from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 from model import *
+from helper import *
 
 import pdb
 
 
 class Fetcher(object):
     def __init__(self, feed_url):
-        self.data = feedparser.parse(feed_url)
-        self.session = scoped_session(sessionmaker(bind=engine))
+        self.db = scoped_session(sessionmaker(bind=engine))
+        self.result = feedparser.parse(feed_url)
 
-        pdb.set_trace()
-
-    def dump_feed(self):
-        self.feed = Feed(
-                        feedname=self.data.feed.title,
-                        feedurl=self.data.feed.link,
-                        feedpubdate=time.strftime('%Y-%m-%d %H:%M:%S',
-                            self.data.feed.get('published_parsed',
-                                self.data.feed.get('updated_parsed')
+    def parse_feed(self):
+        try:
+            self.feed = self.db.query(Feed).filter_by(
+                            feedurl=self.result.feed.link).one()
+        except:
+            self.feed = Feed(
+                            feedname=self.result.feed.title,
+                            feedurl=self.result.feed.link,
+                            feedpubdate = to_time(
+                                self.result.feed.get('publishde_parsed',
+                                    self.result.feed.get('updated_parsed')
+                                )),
                             )
-                        ),
-                    )
 
-    def dump_items(self):
-        for entry in self.data.entries:
+        for link in self.result.feed.links:
+            if 'html' in link['type']:
+                self.feed.sourceurl = link['href']
+
+        if not self.feed.feedpubdate:
+            self.feed.feedpubdate = to_time(time.gmtime())
+
+    def _prepare_items(self, new_entries):
+        for entry in new_entries:
             url = entry.link
-            pubdate = time.strftime('%Y-%m-%d %H:%M:%S',
-                        entry.get('published_parsed',
+            pubdate = to_time(entry.get('published_parsed',
                             entry.get('updated_parsed')
-                        )
-                    )
+                                )
+                            )
             title = entry.title
             snippet = entry.get('summary', entry.get('description'))
             content = entry.get('content', entry.get('description'))
@@ -55,19 +65,45 @@ class Fetcher(object):
                     )
             self.feed.items.append(item)
 
-    def check_pubdate(self):
-        pdb.set_trace()
+    def parse_items(self):
+        try:
+            newest_item = self.db.query(Item).order_by(Item.pubdate.desc())[0]
+        except:
+            self._prepare_items(self.result.entries)
+        else:
+            sorted_entries = {}
+            for entry in self.result.entries:
+                entry_time = to_time(entry.get('published_parsed',
+                                entry.get('updated_parsed')
+                                    )
+                                )
+                sorted_entries[entry_time] = entry
+
+            entry_times = sorted_entries.keys()
+            entry_times.sort(reverse=True)
+
+            new_entries = []
+            for entry_time in entry_times:
+                tmp_entry = sorted_entries[entry_time]
+                tmp_guid = hashlib.md5(to_utf8(tmp_entry.title+tmp_entry.link)).hexdigest()
+
+                if tmp_guid != newest_item.guid:
+                    new_entries.append(tmp_entry)
+                else:
+                    break
+
+            self._prepare_items(new_entries)
 
     def save_to_db(self):
-        pdb.set_trace()
-        self.session.add(self.feed)
-        self.session.commit()
+        self.db.add(self.feed)
+        self.db.commit()
 
 
 
 if __name__ == '__main__':
-    dumper = Fetcher('./testfeed.xml')
-    dumper.dump_feed()
-    dumper.dump_items()
+    dumper = Fetcher('http://blog.zengq.in/feed.xml')
+    dumper.parse_feed()
+    dumper.parse_items()
+    #pdb.set_trace()
     #dumper.save_to_db()
 
