@@ -43,6 +43,14 @@ class Fetcher(object):
             self.feed.feedpubdate = to_time(time.gmtime())
 
     def _prepare_items(self, new_entries):
+        if not len(new_entries):
+            return False
+
+        if not self.feed.itemunread:
+            self.feed.itemunread = 0
+
+        self.feed.itemunread += len(new_entries)
+
         for entry in new_entries:
             url = entry.link
             pubdate = to_time(entry.get('published_parsed',
@@ -52,7 +60,8 @@ class Fetcher(object):
             title = entry.title
             snippet = entry.get('summary', entry.get('description'))
             content = entry.get('content', entry.get('description'))
-            content = content[0].value
+            if isinstance(content, list):
+                content = content[0].value
             guid = hashlib.md5((title+url).encode('utf-8')).hexdigest()
 
             item = Item(
@@ -67,7 +76,10 @@ class Fetcher(object):
 
     def parse_items(self):
         try:
-            newest_item = self.db.query(Item).order_by(Item.pubdate.desc())[0]
+            newest_item = self.db.query(Item).join(Feed).\
+                        filter(Item.feedid==Feed.feedid).\
+                        filter(Feed.feedname==self.feed.feedname).\
+                        order_by(Item.pubdate.desc())[0]
         except:
             self._prepare_items(self.result.entries)
         else:
@@ -101,9 +113,12 @@ class Fetcher(object):
 
 
 if __name__ == '__main__':
-    dumper = Fetcher('http://blog.zengq.in/feed.xml')
+    dumper = Fetcher('http://solidot.org.feedsportal.com/c/33236/f/556826/index.rss')
+    #dumper = Fetcher('http://jandan.net/feed')
+    #dumper = Fetcher('./testfeed.xml')
+    #dumper = Fetcher('http://blog.zengq.in/feed.xml')
+    #dumper = Fetcher('http://www.baibanbao.net/feed')
     dumper.parse_feed()
     dumper.parse_items()
-    #pdb.set_trace()
-    #dumper.save_to_db()
+    dumper.save_to_db()
 

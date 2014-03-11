@@ -21,7 +21,7 @@ class Admin(Base):
     password = Column(String, nullable=False)
 
     def __repr__(self):
-        return '<Admin(username="%s")' % self.username
+        return '<Admin(username="%s")' % to_utf8(self.username)
 
 
 class Feed(Base):
@@ -36,7 +36,8 @@ class Feed(Base):
     itemunread = Column(Integer, default=0)
 
     def __repr__(self):
-        return '<Feed(feed="%s", url="%s")>' % (self.feedname, self.feedurl)
+        return '<Feed(feed="%s", url="%s")>' % (to_utf8(self.feedname),
+                                                to_utf8(self.feedurl))
 
 
 class Item(Base):
@@ -57,7 +58,8 @@ class Item(Base):
 
 
     def __repr__(self):
-        return '<Item(title="%s", feed="%s")' % (to_utf8(self.title), to_utf8(self.feed.feedname))
+        return '<Item(title="%s", feed="%s")' % (to_utf8(self.title),
+                                                to_utf8(self.feed.feedname))
 
 
 db_file_path = 'sqlite:///' + './db/data.sqlite'
