@@ -1,6 +1,7 @@
 <aside id="sidebar">
     <h2><a href="/"><i class="fa fa-rss fa-fw"></i>All</a></h2>
     <ul id="feedlist">
+        {% if all_feeds.count() %}
         {% for feed in all_feeds %}
         <li>
             <a href="/feed/{{ feed.feedid }}">
@@ -10,6 +11,9 @@
                 {% end %}
             </a>
         </li>
+        {% end %}
+        {% else %}
+        <p>No feeds yet.</p>
         {% end %}
     </ul>
     <h2><a href="#"><i class="fa fa-star fa-fw"></i>Stars</a></h2>

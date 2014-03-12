@@ -9,8 +9,13 @@ from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import scoped_session, sessionmaker
 
 Base = declarative_base()
+
+db_file_path = 'sqlite:///' + './db/data.sqlite'
+engine = create_engine(db_file_path)
+session = scoped_session(sessionmaker(bind=engine))
 
 
 class Admin(Base):
@@ -62,10 +67,10 @@ class Item(Base):
                                                 to_utf8(self.feed.feedname))
 
 
-db_file_path = 'sqlite:///' + './db/data.sqlite'
-engine = create_engine(db_file_path)
-
-Base.metadata.create_all(engine)
+#db_file_path = 'sqlite:///' + './db/data.sqlite'
+#engine = create_engine(db_file_path)
+#
+#Base.metadata.create_all(engine)
 
 
 if __name__ == '__main__':

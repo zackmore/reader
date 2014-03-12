@@ -113,11 +113,11 @@ class Fetcher(object):
 
 
 if __name__ == '__main__':
-    dumper = Fetcher('http://solidot.org.feedsportal.com/c/33236/f/556826/index.rss')
+    #dumper = Fetcher('http://solidot.org.feedsportal.com/c/33236/f/556826/index.rss')
     #dumper = Fetcher('http://jandan.net/feed')
     #dumper = Fetcher('./testfeed.xml')
     #dumper = Fetcher('http://blog.zengq.in/feed.xml')
-    #dumper = Fetcher('http://www.baibanbao.net/feed')
+    dumper = Fetcher('http://www.baibanbao.net/feed')
     dumper.parse_feed()
     dumper.parse_items()
     dumper.save_to_db()

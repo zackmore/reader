@@ -11,14 +11,5 @@ $(function(){
         $(this).removeClass('show');
         $('.sidebar-btn, #sidebar').removeClass('show');
     });
-    $('body').swipe({
-        swipeLeft: function(){
-            $('#sidebar, #nav-overall, .sidebar-btn').removeClass('show');
-        },
-        swipeRight: function(){
-            $('#sidebar, #nav-overall, .sidebar-btn').addClass('show');
-        }
-    });
-
     // Functional
 });

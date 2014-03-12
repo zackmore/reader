@@ -5,7 +5,6 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.options
 
-from sqlalchemy.orm import scoped_session, sessionmaker
 from model import *
 import helper
 
@@ -111,4 +110,5 @@ if __name__ == '__main__':
     tornado.options.parse_command_line()
     http_server = tornado.httpserver.HTTPServer(Application())
     http_server.listen(options.port)
+
     tornado.ioloop.IOLoop.instance().start()
