@@ -17,13 +17,17 @@
         {% end %}
     </ul>
     <h2><a href="#"><i class="fa fa-star fa-fw"></i>Stars</a></h2>
+    {% if not admin_user %}
     <h2><i class="fa fa-user fa-fw"></i>Sign in to manage</h2>
-    <form action="/login" class="clearfix">
-        <input type="text" placeholder="Username">
-        <input type="password" placeholder="Password">
+    <form action="/login" class="clearfix" method="post">
+        {% raw xsrf_form_html() %}
+        <input type="text" name="username" placeholder="Username">
+        <input type="password" name="password" placeholder="Password">
         <input type="checkbox" name="remember" id="form-remember">
         <label for="form-remember">Remember me</label>
         <input type="submit" value="Sign in">
     </form>
+    {% else %}
     <h2><a href="/admin"><i class="fa fa-user fa-fw"></i>Hello Admin, <span>Manage</span></a></h2>
+    {% end %}
 </aside>
