@@ -18,6 +18,7 @@ class Application(tornado.web.Application):
             (r'/feed/(\d+)', FeedHandler),
             (r'/item/(\d+)', ItemHandler),
             (r'/login', LoginHandler),
+            (r'/logout', LogoutHandler),
         ]
         settings = dict(
             template_path=os.path.join(os.path.dirname(__file__),
@@ -69,9 +70,14 @@ class LoginHandler(BaseHandler):
 
         if result.count():
             self.set_secure_cookie('uid', str(result.one().userid))
-            self.redirect('/')
-        else:
-            return
+        self.redirect('/')
+
+
+class LogoutHandler(BaseHandler):
+    def get(self):
+        if self.current_user:
+            self.clear_cookie('uid')
+        self.redirect('/')
 
 
 class MainHandler(BaseHandler):
@@ -89,7 +95,7 @@ class MainHandler(BaseHandler):
             items_quantity = self.db.query(Item).count()
         else:
             newest_items = self.db.query(Item).\
-                            filter(Item.readed==0).\
+                            filter_by(readed==False).\
                             order_by(Item.pubdate.desc()).\
                             offset(flag_offset).\
                             limit(helper.CONFIG['Global']['more_quantity'])
@@ -134,6 +140,13 @@ class FeedHandler(BaseHandler):
 class ItemHandler(BaseHandler):
     def get(self, itemid):
         item = self.db.query(Item).filter_by(itemid=itemid).one()
+
+        if self.current_user:
+            if not item.readed:
+                item.readed = True
+                item.feed.itemunread -= 1
+                self.db.add(item)
+                self.db.commit()
 
         self.render('article.html', article=item)
 
