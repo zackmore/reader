@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div id="feed-content">
-    <h3>{{ article.title }}<a target="_blank" href="{{ article.url }}"><i class="fa fa-share-square-o"></i></a></h3>
+    <h3>{{ article.title }}<a target="_blank" href="{{ article.url }}"><i class="fa fa-share-square-o"></i><span>查看原文</span></a></h3>
     <span>{{ article.pubdate }}</span>
     <div>
         {% autoescape None %}

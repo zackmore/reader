@@ -113,14 +113,41 @@ class Fetcher(object):
         self.db.commit()
 
 
+class CheckNew(object):
+    def __init__(self):
+        self.db = scoped_session(sessionmaker(bind=engine))
+
+        result = self.db.query(Feed)
+        if result.count():
+            self.feeds = result.all()
+        else:
+            return
+
+    def update_feeds(self):
+        for feed in self.feeds:
+            tmp_dumper = Fetcher(feed.feedurl)
+            tmp_dumper.parse_feed()
+            tmp_dumper.parse_items()
+            tmp_dumper.save_to_db()
+
+    def recalc_unreaded(self):
+        for feed in self.feeds:
+            number = self.db.query(Item).\
+                    filter(Item.feedid==feed.feedid).\
+                    filter(Item.readed==0).count()
+            feed.itemunread = number
+            self.db.add(feed)
+            self.db.commit()
 
 if __name__ == '__main__':
     #dumper = Fetcher('http://solidot.org.feedsportal.com/c/33236/f/556826/index.rss')
     #dumper = Fetcher('http://jandan.net/feed')
     #dumper = Fetcher('./testfeed.xml')
     #dumper = Fetcher('http://blog.zengq.in/feed.xml')
-    dumper = Fetcher('http://www.baibanbao.net/feed')
-    dumper.parse_feed()
-    dumper.parse_items()
-    dumper.save_to_db()
+    #dumper = Fetcher('http://www.baibanbao.net/feed')
+    #dumper.parse_feed()
+    #dumper.parse_items()
+    #dumper.save_to_db()
+    c = CheckNew()
+    c.recalc_unreaded()
 

@@ -2,7 +2,11 @@
 {% block content %}
 <ul id="items-list">
     {% for item in newest_items %}
+    {% if item.readed %}
+    <li class="readed">
+    {% else %}
     <li>
+    {% end %}
     <a href="/item/{{ item.itemid }}" class="detail">
         <h3>{{ item.title }}</h3>
         <p>{{ item.snippet[:50] }}...</p>

@@ -85,23 +85,27 @@ class LogoutHandler(BaseHandler):
 
 class MainHandler(BaseHandler):
     def get(self):
+        mode = self.get_argument('mode', 'normal')
+        if mode == 'all':
+            all_items_number = self.db.query(Item).count()
+        elif mode == 'normal':
+            all_items_number = self.db.query(Item).\
+                                filter_by(readed=False).count()
         per_page = config.Index_per_page
-        page_number = int(self.get_argument('more', 0))
-        all_items_number = self.db.query(Item).count()
+        page_number = int(self.get_argument('more', 1))
         pagination = Pagination(page_number, all_items_number, per_page)
 
-        mode = self.get_argument('mode', 'normal')
         if mode == 'all':
             newest_items = self.db.query(Item).\
                             order_by(Item.pubdate.desc()).\
                             offset(pagination.start_point).\
-                            limit(pagination.per_page)
+                            limit(pagination.per_page+1)
         elif mode == 'normal':
             newest_items = self.db.query(Item).\
                             filter_by(readed=False).\
                             order_by(Item.pubdate.desc()).\
                             offset(pagination.start_point).\
-                            limit(pagination.per_page)
+                            limit(pagination.per_page+1)
 
         self.render('list.html',
                     newest_items=newest_items,
@@ -111,15 +115,29 @@ class MainHandler(BaseHandler):
 
 class FeedHandler(BaseHandler):
     def get(self, feedid):
+        mode = self.get_argument('mode', 'normal')
+        if mode == 'all':
+            all_items_number = self.db.query(Item).\
+                                filter_by(feedid=feedid).count()
+        elif mode == 'normal':
+            all_items_number = self.db.query(Item).\
+                                filter_by(readed=False).\
+                                filter_by(feedid=feedid).count()
         per_page = config.Index_per_page
-        page_number = int(self.get_argument('more', 0))
-        all_items_number = self.db.query(Item).filter_by(feedid=feedid).count()
+        page_number = int(self.get_argument('more', 1))
         pagination = Pagination(page_number, all_items_number, per_page)
 
-        items = self.db.query(Item).filter_by(feedid=feedid).\
-                order_by(Item.pubdate.desc()).\
-                offset(pagination.page_number).\
-                limit(pagination.per_page)
+        if mode == 'all':
+            items = self.db.query(Item).filter_by(feedid=feedid).\
+                    order_by(Item.pubdate.desc()).\
+                    offset(pagination.start_point).\
+                    limit(pagination.per_page)
+        elif mode == 'normal':
+            items = self.db.query(Item).filter_by(feedid=feedid).\
+                    filter_by(readed=False).\
+                    order_by(Item.pubdate.desc()).\
+                    offset(pagination.start_point).\
+                    limit(pagination.per_page)
 
         self.render('list.html',
                     newest_items=items,

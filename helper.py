@@ -47,7 +47,7 @@ def parse_time(value):
 
 class Pagination(object):
     def __init__(self, page_number, all_items_number, per_page):
-        self.page_number = page_number + 1
+        self.page_number = page_number
         self.per_page = per_page
         self.pages = all_items_number / per_page
         if all_items_number % per_page != 0:

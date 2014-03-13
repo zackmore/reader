@@ -388,8 +388,14 @@ header a{
     padding-bottom: 1.5em;
 }
 
+#items-list li.readed .detail h3,
+#items-list li.readed .detail p{
+    color: #ccc;
+}
+
 #items-list .detail{
     text-decoration: none;
+    display: block;
 }
 
 #items-list .detail:hover h3,
@@ -485,9 +491,14 @@ header a{
 }
 
 #feed-content > h3 a{
-    font-size: .67em;
+    font-size: .5417em;
     color: #b55e54;
     margin-left: 10px;
+    text-decoration: none;
+}
+
+#feed-content > h3 a span{
+    margin-left: 5px;
 }
 
 #feed-content > span{
