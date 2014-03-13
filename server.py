@@ -205,7 +205,10 @@ class ItemStatusHandler(BaseHandler):
             item.star = not item.star
         elif result == 'read':
             item.readed = not item.readed
-            item.feed.itemunread -= 1
+            if item.readed:
+                item.feed.itemunread -= 1
+            else:
+                item.feed.itemunread += 1
 
         self.db.add(item)
         self.db.commit()
