@@ -13,10 +13,28 @@
     </a>
     <span>{{ item.pubdate }} <a href="/feed/{{ item.feedid }}">{{ item.feed.feedname }}</a></span>
     {% if admin_user %}
-    <b class="clearfix">
-        <a href="#" class="unread"><i class="fa fa-check-square-o fa-fw"></i>Mark as unread</a>
-        <a href="#" class="star"><i class="fa fa-star-o fa-fw"></i>Star</a>
-    </b>
+    <form class="clearfix" method="post" action="/itemstatus">
+        <input type="hidden" name="itemid" value="{{ item.itemid }}">
+        {% if item.readed %}
+        <button type="submit" name="read" class="read">
+            <i class="fa fa-check-square-o fa-fw"></i>Mark as unread
+        </button>
+        {% else %}
+        <button type="submit" name="read" class="read">
+            <i class="fa fa-square-o fa-fw"></i>Mark as readed
+        </button>
+        {% end %}
+
+        {% if item.star %}
+        <button type="submit" name="star" class="star">
+            <i class="fa fa-star fa-fw"></i>Unstar
+        </button>
+        {% else %}
+        <button type="submit" name="star" class="star">
+            <i class="fa fa-star-o fa-fw"></i>Star
+        </button>
+        {% end %}
+    </form>
     {% end %}
     </li>
     {% end %}

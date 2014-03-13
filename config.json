@@ -1,8 +1,0 @@
-{
-    "Global":{
-        "reader_name":"MyMorningReader",
-        "version":"0.1",
-        "more_quantity": 10
-    },
-    "feedfetcher":{"fetch_frequency":""}
-}

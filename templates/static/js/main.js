@@ -11,5 +11,16 @@ $(function(){
         $(this).removeClass('show');
         $('.sidebar-btn, #sidebar').removeClass('show');
     });
+    // crumb scroll fix
+    /*
+    $(window).scroll(function(){
+        if($(window).scrollTop() >= 40){
+            $('#crumb').addClass('fix');
+        }else{
+            $('#crumb').removeClass('fix');
+        }
+    });
+    */
+
     // Functional
 });

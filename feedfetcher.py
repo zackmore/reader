@@ -139,6 +139,11 @@ class CheckNew(object):
             self.db.add(feed)
             self.db.commit()
 
+def check_new():
+    worker = CheckNew()
+    worker.update_feeds()
+    worker.recalc_unreaded()
+
 if __name__ == '__main__':
     #dumper = Fetcher('http://solidot.org.feedsportal.com/c/33236/f/556826/index.rss')
     #dumper = Fetcher('http://jandan.net/feed')

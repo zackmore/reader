@@ -225,10 +225,16 @@ header a{
 
 .sidebar-btn{
     position: fixed;
-    top: 11px;
-    left: 10px;
+    top: 0;
+    left: 0;
     color: #fff;
+    background: #222;
     z-index: 999;
+    display: block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
 }
 
 .sidebar-btn.show{
@@ -243,6 +249,7 @@ header a{
     font-weight: normal;
 }
 
+/*
 #crumb{
     height: 2.5em;
     line-height: 2.5;
@@ -257,17 +264,34 @@ header a{
     z-index: 996;
     font-family: Helvetica, Arial, sans-serif;
 }
+*/
+
+#crumb{
+    height: 40px;
+    line-height: 40px;
+    padding-left: 50px;
+    background: rgba(0,0,0,.6);
+    color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+#crumb.fix{
+}
 
 #sidebar{
     position: fixed;
     width: 280px;
     background: #283339;
-    top: 40px;
+    top: 0;
     left: -280px;
     bottom: 0;
     overflow: auto;
     transition: all .2s ease-in-out;
     z-index: 998;
+    padding-top: 40px;
 }
 
 #sidebar.show{
@@ -290,6 +314,11 @@ header a{
     color: #fff;
     text-decoration: none;
     display: block;
+}
+
+#sidebar h2 a:hover,
+#sidebar h2 a:hover i{
+    color: #b55e54;
 }
 
 #sidebar h2 a.active{
@@ -385,7 +414,7 @@ header a{
 
 #items-list li{
     border-bottom: 1px solid #efefef;
-    padding-bottom: 1.5em;
+    padding-bottom: .75em;
 }
 
 #items-list li.readed .detail h3,
@@ -427,33 +456,38 @@ header a{
     margin-left: .5em;
 }
 
-#items-list b{
+#items-list form{
     display: block;
     font-weight: normal;
     margin-top: .75em;
 }
 
-#items-list b a{
-    font-size: .8125em;
+#items-list form button{
     text-decoration: none;
     color: #b55e54;
     line-height: 1.23;
+    border: 0;
+    background: none;
+    font-family: Georgia, Times, serif;
+    font-size: .8125em;
+    outline: none;
+    padding: 0;
 }
 
-#items-list b a:active{
+#items-list form button:active{
     background: #b55e54;
     color: #fff;
 }
 
-#items-list b a.unread{
+#items-list form button.read{
     float: left;
 }
 
-#items-list b a.star{
+#items-list form button.star{
     float: right;
 }
 
-#items-list b a i{
+#items-list form button i{
     margin-right: 2px;
 }
 
@@ -475,13 +509,7 @@ header a{
 
 #feed-content{
     background: #fff;
-    position: absolute;
-    top: 40px;
-    padding: 0 10px;
-}
-
-#feed-content.show{
-    display: block;
+    padding: 10px;
 }
 
 #feed-content > h3{
@@ -509,7 +537,7 @@ header a{
 }
 
 #feed-content > div{
-    line-height: 1.6;
+    line-height: 1.7;
 }
 
 #feed-content > div img{
@@ -536,9 +564,11 @@ header{
     text-indent: 12px;
 }
 
+/*
 #crumb{
     display: none;
 }
+*/
 
 .sidebar-btn{
     display: none;
@@ -549,7 +579,7 @@ header{
 }
 
 #content{
-    margin: 80px 0 0 320px;
+    margin: 70px 0 0 320px;
     max-width: 32em;
 }
 
