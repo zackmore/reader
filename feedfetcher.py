@@ -18,17 +18,19 @@ import pdb
 
 class Fetcher(object):
     def __init__(self, feed_url):
+        self.feedurl = feed_url
         self.db = scoped_session(sessionmaker(bind=engine))
         self.result = feedparser.parse(feed_url)
 
     def parse_feed(self):
         try:
             self.feed = self.db.query(Feed).filter_by(
-                            feedurl=self.result.feed.link).one()
+                            feedurl=self.feedurl).one()
         except:
             self.feed = Feed(
                             feedname=self.result.feed.title,
-                            feedurl=self.result.feed.link,
+                            feedurl=self.feedurl,
+                            sourceurl=self.result.feed.link,
                             feedpubdate = to_time(
                                 self.result.feed.get('publishde_parsed',
                                     self.result.feed.get('updated_parsed')
