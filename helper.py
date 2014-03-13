@@ -8,13 +8,6 @@ from tornado.ioloop import PeriodicCallback
 
 import pdb
 
-
-# Get config
-config_file = file(os.path.join(os.path.dirname(__file__),
-                                'config.json'), 'r')
-CONFIG = json.loads(config_file.read())
-config_file.close()
-
 # Help functions
 def to_unicode(value):
     if isinstance(value, unicode):
@@ -51,5 +44,35 @@ def parse_time(value):
         print('Unrecorgnized time format. Error: %s' % e)
         sys.exit()
 
-def HELP_snippet_trunc(text_string):
-    return text_string[:30]
+
+class Pagination(object):
+    def __init__(self, page_number, all_items_number, per_page):
+        self.page_number = page_number + 1
+        self.per_page = per_page
+        self.pages = all_items_number / per_page
+        if all_items_number % per_page != 0:
+            self.pages += 1
+
+    @property
+    def start_point(self):
+        return (self.page_number - 1) * self.per_page
+    
+    @property
+    def end_point(self):
+        return (self.page_number - 1) * self.per_page + self.per_page
+
+    @property
+    def has_prev(self):
+        return self.page_number > 1
+
+    @property
+    def prev_number(self):
+        return self.page_number - 1
+
+    @property
+    def has_next(self):
+        return self.page_number < self.pages
+
+    @property
+    def next_number(self):
+        return self.page_number + 1

@@ -6,7 +6,8 @@ import tornado.ioloop
 import tornado.options
 
 from model import *
-import helper
+from helper import *
+import config
 
 from tornado.options import define, options
 define('port', default=9999, help='run on the given port', type=int)
@@ -53,7 +54,9 @@ class BaseHandler(tornado.web.RequestHandler):
 class SidebarModule(tornado.web.UIModule):
     def render(self):
         all_feeds = self.handler.db.query(Feed).order_by(Feed.feedid)
-        return self.render_string('sidebar.html', all_feeds=all_feeds, admin_user=self.current_user)
+        return self.render_string('sidebar.html',
+                                    all_feeds=all_feeds,
+                                    admin_user=self.current_user)
 
 
 class LoginHandler(BaseHandler):
@@ -82,59 +85,46 @@ class LogoutHandler(BaseHandler):
 
 class MainHandler(BaseHandler):
     def get(self):
+        per_page = config.Index_per_page
+        page_number = int(self.get_argument('more', 0))
+        all_items_number = self.db.query(Item).count()
+        pagination = Pagination(page_number, all_items_number, per_page)
+
         mode = self.get_argument('mode', 'normal')
-        items_step = int(self.get_argument('more', 0))
-
-        flag_offset = items_step * helper.CONFIG['Global']['more_quantity']
-
         if mode == 'all':
             newest_items = self.db.query(Item).\
                             order_by(Item.pubdate.desc()).\
-                            offset(flag_offset).\
-                            limit(helper.CONFIG['Global']['more_quantity'])
-            items_quantity = self.db.query(Item).count()
-        else:
+                            offset(pagination.start_point).\
+                            limit(pagination.per_page)
+        elif mode == 'normal':
             newest_items = self.db.query(Item).\
-                            filter_by(readed==False).\
+                            filter_by(readed=False).\
                             order_by(Item.pubdate.desc()).\
-                            offset(flag_offset).\
-                            limit(helper.CONFIG['Global']['more_quantity'])
-            items_quantity = self.db.query(Item).filter(Item.readed==0).count()
-
-        next_step = int(items_step) + 1
-
-        if items_quantity - flag_offset <= 10:
-            flag_no_more = True
-        else:
-            flag_no_more = False
+                            offset(pagination.start_point).\
+                            limit(pagination.per_page)
 
         self.render('list.html',
                     newest_items=newest_items,
-                    next_step=next_step,
-                    flag_no_more=flag_no_more)
+                    pagination=pagination,
+                    admin_user=self.current_user)
 
 
 class FeedHandler(BaseHandler):
     def get(self, feedid):
-        items_step = int(self.get_argument('more', 0))
-        flag_offset = items_step * helper.CONFIG['Global']['more_quantity']
+        per_page = config.Index_per_page
+        page_number = int(self.get_argument('more', 0))
+        all_items_number = self.db.query(Item).filter_by(feedid=feedid).count()
+        pagination = Pagination(page_number, all_items_number, per_page)
 
         items = self.db.query(Item).filter_by(feedid=feedid).\
                 order_by(Item.pubdate.desc()).\
-                offset(items_step*helper.CONFIG['Global']['more_quantity']).\
-                limit(helper.CONFIG['Global']['more_quantity'])
+                offset(pagination.page_number).\
+                limit(pagination.per_page)
 
-        items_quantity = self.db.query(Item).filter(Item.readed==0).count()
-
-        next_step = int(items_step) + 1
-
-        if items_quantity - flag_offset <= 10:
-            flag_no_more = True
-        else:
-            flag_no_more = False
-
-        self.render('list.html', newest_items=items,
-                    next_step=next_step, flag_no_more=flag_no_more)
+        self.render('list.html',
+                    newest_items=items,
+                    pagination=pagination,
+                    admin_user=self.current_user)
 
 
 class ItemHandler(BaseHandler):

@@ -8,6 +8,12 @@
         <p>{{ item.snippet[:50] }}...</p>
     </a>
     <span>{{ item.pubdate }} <a href="/feed/{{ item.feedid }}">{{ item.feed.feedname }}</a></span>
+    {% if admin_user %}
+    <b class="clearfix">
+        <a href="#" class="unread"><i class="fa fa-check-square-o fa-fw"></i>Mark as unread</a>
+        <a href="#" class="star"><i class="fa fa-star-o fa-fw"></i>Star</a>
+    </b>
+    {% end %}
     </li>
     {% end %}
     <!--
@@ -24,9 +30,9 @@
     </li>
     -->
 </ul>
-{% if not flag_no_more %}
-<a href="?more={{ next_step }}" id="more-btn"><i class="fa fa-angle-double-down fa-fw"></i>View more</a>
+{% if pagination.has_next %}
+<a href="?more={{ pagination.next_number }}" id="more-btn"><i class="fa fa-angle-double-down fa-fw"></i>View more</a>
 {% else %}
-<a href="?more={{ next_step-2 }}" id="more-btn" class="no-more"><i class="fa fa-arrow-left fa-fw"></i>No more, go back</a>
+<a href="?more={{ pagination.prev_number }}" id="more-btn" class="no-more"><i class="fa fa-arrow-left fa-fw"></i>No more, go back</a>
 {% end %}
 {% end %}
