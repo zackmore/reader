@@ -153,6 +153,8 @@ if __name__ == '__main__':
     #dumper.parse_feed()
     #dumper.parse_items()
     #dumper.save_to_db()
+
     c = CheckNew()
-    c.recalc_unreaded()
+    #c.update_feeds()
+    #c.recalc_unreaded()
 

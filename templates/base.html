@@ -18,10 +18,13 @@
         </div>
     </header>
     <a href="#" class="sidebar-btn"><i class="fa fa-align-justify fa-lg"></i></a>
-    {% module Sidebar() %}
+    {% module Sidebar(current_feed) %}
     <div id="content">
         <div id="crumb">
-            homepage
+            <a href="/">All</a>
+            {% if subpage %}
+            &nbsp;&gt;&nbsp;<a href="/feed/{{ subpage.feedid }}">{{ subpage.feedname }}</a>
+            {% end %}
         </div>
         {% block content %}{% end %}
     </div>

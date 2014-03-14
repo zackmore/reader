@@ -59,10 +59,12 @@ class BaseHandler(tornado.web.RequestHandler):
 
 
 class SidebarModule(tornado.web.UIModule):
-    def render(self):
+    def render(self, current_feed):
         all_feeds = self.handler.db.query(Feed).order_by(Feed.feedid)
+
         return self.render_string('sidebar.html',
                                     all_feeds=all_feeds,
+                                    current_feed=current_feed,
                                     admin_user=self.current_user)
 
 
@@ -114,9 +116,13 @@ class MainHandler(BaseHandler):
                             offset(pagination.start_point).\
                             limit(pagination.per_page+1)
 
+        current_feed = 0
+
         self.render('list.html',
                     newest_items=newest_items,
                     pagination=pagination,
+                    subpage=None,
+                    current_feed=current_feed,
                     admin_user=self.current_user)
 
 
@@ -146,15 +152,23 @@ class FeedHandler(BaseHandler):
                     offset(pagination.start_point).\
                     limit(pagination.per_page)
 
+        feed_info = self.db.query(Feed).filter_by(feedid=feedid).one()
+        current_feed = feed_info.feedid
+
         self.render('list.html',
                     newest_items=items,
                     pagination=pagination,
+                    subpage=feed_info,
+                    current_feed=current_feed,
                     admin_user=self.current_user)
 
 
 class ItemHandler(BaseHandler):
     def get(self, itemid):
         item = self.db.query(Item).filter_by(itemid=itemid).one()
+        feed_info = item.feed
+
+        current_feed = feed_info.feedid
 
         if self.current_user:
             if not item.readed:
@@ -163,7 +177,10 @@ class ItemHandler(BaseHandler):
                 self.db.add(item)
                 self.db.commit()
 
-        self.render('article.html', article=item)
+        self.render('article.html',
+                    article=item,
+                    subpage=feed_info,
+                    current_feed=current_feed)
 
 
 class StarHandler(BaseHandler):

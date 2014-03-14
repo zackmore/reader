@@ -249,28 +249,11 @@ header a{
     font-weight: normal;
 }
 
-/*
-#crumb{
-    height: 2.5em;
-    line-height: 2.5;
-    background: #222;
-    color: #fff;
-    text-align: left;
-    padding-left: 60px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 996;
-    font-family: Helvetica, Arial, sans-serif;
-}
-*/
-
 #crumb{
     height: 40px;
     line-height: 40px;
     padding-left: 50px;
-    background: rgba(0,0,0,.6);
+    background: rgba(0,0,0,.8);
     color: #fff;
     position: fixed;
     top: 0;
@@ -278,7 +261,9 @@ header a{
     width: 100%;
 }
 
-#crumb.fix{
+#crumb a{
+    color: #b55e54;
+    text-decoration: none;
 }
 
 #sidebar{
@@ -564,11 +549,13 @@ header{
     text-indent: 12px;
 }
 
-/*
 #crumb{
-    display: none;
+    position: static;
+    background: none;
+    padding-left: 0;
+    color: #222;
+    border-bottom: 1px solid #ccc;
 }
-*/
 
 .sidebar-btn{
     display: none;
@@ -579,7 +566,7 @@ header{
 }
 
 #content{
-    margin: 70px 0 0 320px;
+    margin: 50px 0 0 320px;
     max-width: 32em;
 }
 

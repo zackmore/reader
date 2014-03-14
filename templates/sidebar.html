@@ -1,10 +1,18 @@
 <aside id="sidebar">
-    <h2><a href="/"><i class="fa fa-rss fa-fw"></i>All</a></h2>
+    <h2>
+        <a href="/">
+            <i class="fa fa-rss fa-fw"></i>All
+        </a>
+    </h2>
     <ul id="feedlist">
         {% if all_feeds.count() %}
         {% for feed in all_feeds %}
         <li>
+            {% if feed.feedid == current_feed %}
+            <a href="/feed/{{ feed.feedid }}" class="active">
+            {% else %}
             <a href="/feed/{{ feed.feedid }}">
+            {% end %}
                 {{ feed.feedname }}
                 {% if feed.itemunread > 100 %}
                 <b>(100+)</b>
