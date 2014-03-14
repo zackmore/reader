@@ -20,7 +20,7 @@
     <a href="#" class="sidebar-btn"><i class="fa fa-align-justify fa-lg"></i></a>
     {% module Sidebar(current_feed) %}
     <div id="content">
-        {% module Toolbar(showtabs, subpage, pagination) %}
+        {% module Toolbar(showtabs, viewmode, subpage, pagination) %}
         {% block content %}{% end %}
     </div>
     <div id="nav-overall"></div>

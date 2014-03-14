@@ -53,8 +53,8 @@
     -->
 </ul>
 {% if pagination.has_next %}
-<a href="?more={{ pagination.next_number }}" id="more-btn"><i class="fa fa-angle-double-down fa-fw"></i>View more</a>
+<a href="?mode={{ viewmode }}&more={{ pagination.next_number }}" id="more-btn"><i class="fa fa-angle-double-down fa-fw"></i>View more</a>
 {% else %}
-<a href="?more={{ pagination.prev_number }}" id="more-btn" class="no-more"><i class="fa fa-arrow-left fa-fw"></i>No more, go back</a>
+<a href="?mode={{ viewmode }}&more={{ pagination.prev_number }}" id="more-btn" class="no-more"><i class="fa fa-arrow-left fa-fw"></i>No more, go back</a>
 {% end %}
 {% end %}

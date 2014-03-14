@@ -1,7 +1,11 @@
 <div id="toolbar" class="clearfix">
     {% if showtabs %}
     <div id="viewtabs">
-        <a href="#" class="active">Unr.</a><a href="#">All.</a>
+        {% if viewmode == 'normal' %}
+            <a href="?mode=normal" class="active">Unr.</a><a href="?mode=all">All.</a>
+        {% elif viewmode == 'all' %}
+            <a href="?mode=normal">Unr.</a><a href="?mode=all" class="active">All.</a>
+        {% end %}
     </div>
     {% end %}
     <div id="crumb" class="clearfix">

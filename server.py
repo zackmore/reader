@@ -73,9 +73,10 @@ class SidebarModule(tornado.web.UIModule):
                                     admin_user=self.current_user)
 
 class ToolbarModule(tornado.web.UIModule):
-    def render(self, showtabs, subpage, pagination):
+    def render(self, showtabs, viewmode, subpage, pagination):
         return self.render_string('toolbar.html',
                                     showtabs=showtabs,
+                                    viewmode=viewmode,
                                     subpage=subpage,
                                     pagination=pagination)
 
@@ -127,6 +128,9 @@ class MainHandler(BaseHandler):
                             offset(pagination.start_point).\
                             limit(pagination.per_page)
 
+        if not newest_items.count():
+            raise tornado.web.HTTPError(404)
+
         current_feed = 0
 
         self.render('list.html',
@@ -135,6 +139,7 @@ class MainHandler(BaseHandler):
                     subpage=None,
                     current_feed=current_feed,
                     showtabs=True,
+                    viewmode=self.uri_query.mode,
                     admin_user=self.current_user)
 
 
@@ -169,12 +174,16 @@ class FeedHandler(BaseHandler):
                         id=feed_info.feedid,
                         name=feed_info.feedname)
 
+        if not items.count():
+            raise tornado.web.HTTPError(404)
+
         self.render('list.html',
                     newest_items=items,
                     pagination=pagination,
                     subpage=subpage,
                     current_feed=current_feed,
                     showtabs=True,
+                    viewmode=self.uri_query.mode,
                     admin_user=self.current_user)
 
 
@@ -223,6 +232,7 @@ class StarHandler(BaseHandler):
                     current_feed=0,
                     subpage=subpage,
                     showtabs=True,
+                    viewmode=self.uri_query.mode,
                     admin_user=self.current_user)
 
 
