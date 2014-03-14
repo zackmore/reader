@@ -154,11 +154,14 @@ class FeedHandler(BaseHandler):
 
         feed_info = self.db.query(Feed).filter_by(feedid=feedid).one()
         current_feed = feed_info.feedid
+        subpage = dict(type='feed',
+                        id=feed_info.feedid,
+                        name=feed_info.feedname)
 
         self.render('list.html',
                     newest_items=items,
                     pagination=pagination,
-                    subpage=feed_info,
+                    subpage=subpage,
                     current_feed=current_feed,
                     admin_user=self.current_user)
 
@@ -167,6 +170,9 @@ class ItemHandler(BaseHandler):
     def get(self, itemid):
         item = self.db.query(Item).filter_by(itemid=itemid).one()
         feed_info = item.feed
+        subpage = dict(type='feed',
+                        id=feed_info.feedid,
+                        name=feed_info.feedname)
 
         current_feed = feed_info.feedid
 
@@ -179,7 +185,7 @@ class ItemHandler(BaseHandler):
 
         self.render('article.html',
                     article=item,
-                    subpage=feed_info,
+                    subpage=subpage,
                     current_feed=current_feed)
 
 
@@ -195,9 +201,13 @@ class StarHandler(BaseHandler):
         pagination = Pagination(page_number, all_items_number, per_page)
 
         items = result.all()
+        subpage = dict(type='star', url='/star', name='Star')
+
         self.render('list.html',
                     newest_items=items,
                     pagination=pagination,
+                    current_feed=0,
+                    subpage=subpage,
                     admin_user=self.current_user)
 
 
