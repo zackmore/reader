@@ -20,16 +20,7 @@
     <a href="#" class="sidebar-btn"><i class="fa fa-align-justify fa-lg"></i></a>
     {% module Sidebar(current_feed) %}
     <div id="content">
-        <div id="crumb">
-            <a href="/">All</a>
-            {% if subpage %}
-                {% if subpage['type'] == 'feed' %}
-                &nbsp;&gt;&nbsp;<a href="/feed/{{ subpage['id'] }}">{{ subpage['name'] }}</a>
-                {% elif subpage['type'] == 'star' %}
-                &nbsp;&gt;&nbsp;<a href="{{ subpage['url'] }}">{{ subpage['name'] }}</a>
-                {% end %}
-            {% end %}
-        </div>
+        {% module Toolbar(showtabs, subpage, pagination) %}
         {% block content %}{% end %}
     </div>
     <div id="nav-overall"></div>

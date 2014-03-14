@@ -216,7 +216,7 @@ header{
     background: #222222;
     text-align: center;
     position: relative;
-    z-index: 999;
+    z-index: 1000;
 }
 
 header a{
@@ -229,7 +229,7 @@ header a{
     left: 0;
     color: #fff;
     background: #222;
-    z-index: 999;
+    z-index: 1000;
     display: block;
     width: 40px;
     height: 40px;
@@ -249,21 +249,57 @@ header a{
     font-weight: normal;
 }
 
-#crumb{
+#toolbar{
     height: 40px;
     line-height: 40px;
     padding-left: 50px;
+    padding-right: 10px;
     background: rgba(0,0,0,.8);
     color: #fff;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
+    z-index: 999;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
-#crumb a{
+#toolbar #viewtabs{
+    float: left;
+    margin-right: 10px;
+    margin-left: -9px;
+}
+
+#toolbar #viewtabs a{
+    display: inline-block;
+    padding: 0 5px;
+    margin: 0 1px;
+    color: #fff;
+    background: #222;
+    text-decoration: none;
+    text-align: center;
+    min-width: 40px;
+}
+
+#toolbar #viewtabs a.active{
+    background: #b55e54;
+}
+
+#toolbar #crumb a{
     color: #b55e54;
     text-decoration: none;
+}
+
+#toolbar #crumb .path{
+    float: left;
+}
+
+#toolbar #crumb .page{
+    display: none;
+    float: right;
+    color: #b3b3b3;
 }
 
 #sidebar{
@@ -549,12 +585,21 @@ header{
     text-indent: 12px;
 }
 
-#crumb{
+#toolbar{
     position: static;
     background: none;
     padding-left: 0;
     color: #222;
     border-bottom: 1px solid #ccc;
+}
+
+#toolbar #viewtabs{
+    margin-right: 20px;
+}
+
+#toolbar #viewtabs a{
+    padding: 0 15px;
+    background: #ccc;
 }
 
 .sidebar-btn{
@@ -566,7 +611,7 @@ header{
 }
 
 #content{
-    margin: 50px 0 0 320px;
+    margin: 70px 0 0 320px;
     max-width: 32em;
 }
 

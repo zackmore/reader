@@ -45,6 +45,28 @@ def parse_time(value):
         sys.exit()
 
 
+class QueryParser(object):
+    def __init__(self, request_query):
+        self.request_query = request_query
+        self.arguments = {'mode': 'normal', 'more': 1}
+
+        if '=' not in request_query:
+            return
+
+        pairs = request_query.split('&')
+        for pair in pairs:
+            key, value = pair.split('=')
+            self.arguments[key] = value
+
+    @property
+    def mode(self):
+        return str(self.arguments['mode'])
+
+    @property
+    def more(self):
+        return int(self.arguments['more'])
+
+
 class Pagination(object):
     def __init__(self, page_number, all_items_number, per_page):
         self.page_number = page_number
@@ -76,3 +98,7 @@ class Pagination(object):
     @property
     def next_number(self):
         return self.page_number + 1
+
+
+if __name__ == '__main__':
+    a = QueryParser('mode=all&more=4')

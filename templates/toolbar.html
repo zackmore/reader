@@ -1,0 +1,22 @@
+<div id="toolbar" class="clearfix">
+    {% if showtabs %}
+    <div id="viewtabs">
+        <a href="#" class="active">Unr.</a><a href="#">All.</a>
+    </div>
+    {% end %}
+    <div id="crumb" class="clearfix">
+        <span class="path">
+        <a href="/">All Feeds</a>
+        {% if subpage %}
+            {% if subpage['type'] == 'feed' %}
+            &gt;&nbsp;<a href="/feed/{{ subpage['id'] }}">{{ subpage['name'] }}</a>
+            {% elif subpage['type'] == 'star' %}
+            &gt;&nbsp;<a href="{{ subpage['url'] }}">{{ subpage['name'] }}</a>
+            {% end %}
+        {% end %}
+        </span>
+        {% if pagination %}
+        <span class="page">Page&nbsp;{{ pagination.page_number }}</span>
+        {% end %}
+    </div>
+</div>

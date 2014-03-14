@@ -33,9 +33,10 @@ class Application(tornado.web.Application):
                                         'templates'),
             static_path=os.path.join(os.path.dirname(__file__),
                                         'templates/static'),
-            ui_modules={'Sidebar': SidebarModule},
+            ui_modules={'Sidebar': SidebarModule,
+                        'Toolbar': ToolbarModule,
+                        },
             cookie_secret='1234',
-            #xsrf_cookies=True,
             debug=True
         )
         tornado.web.Application.__init__(self, handlers, **settings)
@@ -57,6 +58,10 @@ class BaseHandler(tornado.web.RequestHandler):
     def db(self):
         return self.application.db
 
+    @property
+    def uri_query(self):
+        return QueryParser(self.request.query)
+
 
 class SidebarModule(tornado.web.UIModule):
     def render(self, current_feed):
@@ -66,6 +71,13 @@ class SidebarModule(tornado.web.UIModule):
                                     all_feeds=all_feeds,
                                     current_feed=current_feed,
                                     admin_user=self.current_user)
+
+class ToolbarModule(tornado.web.UIModule):
+    def render(self, showtabs, subpage, pagination):
+        return self.render_string('toolbar.html',
+                                    showtabs=showtabs,
+                                    subpage=subpage,
+                                    pagination=pagination)
 
 
 class LoginHandler(BaseHandler):
@@ -94,27 +106,26 @@ class LogoutHandler(BaseHandler):
 
 class MainHandler(BaseHandler):
     def get(self):
-        mode = self.get_argument('mode', 'normal')
-        if mode == 'all':
+        if self.uri_query.mode == 'all':
             all_items_number = self.db.query(Item).count()
-        elif mode == 'normal':
+        elif self.uri_query.mode == 'normal':
             all_items_number = self.db.query(Item).\
                                 filter_by(readed=False).count()
         per_page = config.Index_per_page
-        page_number = int(self.get_argument('more', 1))
+        page_number = self.uri_query.more
         pagination = Pagination(page_number, all_items_number, per_page)
 
-        if mode == 'all':
+        if self.uri_query.mode == 'all':
             newest_items = self.db.query(Item).\
                             order_by(Item.pubdate.desc()).\
                             offset(pagination.start_point).\
-                            limit(pagination.per_page+1)
-        elif mode == 'normal':
+                            limit(pagination.per_page)
+        elif self.uri_query.mode == 'normal':
             newest_items = self.db.query(Item).\
                             filter_by(readed=False).\
                             order_by(Item.pubdate.desc()).\
                             offset(pagination.start_point).\
-                            limit(pagination.per_page+1)
+                            limit(pagination.per_page)
 
         current_feed = 0
 
@@ -123,29 +134,29 @@ class MainHandler(BaseHandler):
                     pagination=pagination,
                     subpage=None,
                     current_feed=current_feed,
+                    showtabs=True,
                     admin_user=self.current_user)
 
 
 class FeedHandler(BaseHandler):
     def get(self, feedid):
-        mode = self.get_argument('mode', 'normal')
-        if mode == 'all':
+        if self.uri_query.mode == 'all':
             all_items_number = self.db.query(Item).\
                                 filter_by(feedid=feedid).count()
-        elif mode == 'normal':
+        elif self.uri_query.mode == 'normal':
             all_items_number = self.db.query(Item).\
                                 filter_by(readed=False).\
                                 filter_by(feedid=feedid).count()
         per_page = config.Index_per_page
-        page_number = int(self.get_argument('more', 1))
+        page_number = self.uri_query.more
         pagination = Pagination(page_number, all_items_number, per_page)
 
-        if mode == 'all':
+        if self.uri_query.mode == 'all':
             items = self.db.query(Item).filter_by(feedid=feedid).\
                     order_by(Item.pubdate.desc()).\
                     offset(pagination.start_point).\
                     limit(pagination.per_page)
-        elif mode == 'normal':
+        elif self.uri_query.mode == 'normal':
             items = self.db.query(Item).filter_by(feedid=feedid).\
                     filter_by(readed=False).\
                     order_by(Item.pubdate.desc()).\
@@ -163,6 +174,7 @@ class FeedHandler(BaseHandler):
                     pagination=pagination,
                     subpage=subpage,
                     current_feed=current_feed,
+                    showtabs=True,
                     admin_user=self.current_user)
 
 
@@ -186,6 +198,8 @@ class ItemHandler(BaseHandler):
         self.render('article.html',
                     article=item,
                     subpage=subpage,
+                    pagination=None,
+                    showtabs=False,
                     current_feed=current_feed)
 
 
@@ -197,7 +211,7 @@ class StarHandler(BaseHandler):
         
         all_items_number = result.count()
         per_page = config.Index_per_page
-        page_number = int(self.get_argument('more', 1))
+        page_number = self.uri_query.more
         pagination = Pagination(page_number, all_items_number, per_page)
 
         items = result.all()
@@ -208,6 +222,7 @@ class StarHandler(BaseHandler):
                     pagination=pagination,
                     current_feed=0,
                     subpage=subpage,
+                    showtabs=True,
                     admin_user=self.current_user)
 
 
