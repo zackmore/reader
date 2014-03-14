@@ -155,6 +155,6 @@ if __name__ == '__main__':
     #dumper.save_to_db()
 
     c = CheckNew()
-    #c.update_feeds()
-    #c.recalc_unreaded()
+    c.update_feeds()
+    c.recalc_unreaded()
 

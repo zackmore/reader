@@ -209,6 +209,7 @@ class ItemHandler(BaseHandler):
                     subpage=subpage,
                     pagination=None,
                     showtabs=False,
+                    viewmode=None,
                     current_feed=current_feed)
 
 
