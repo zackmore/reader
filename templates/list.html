@@ -1,60 +1,51 @@
 {% extends "base.html" %}
 {% block content %}
-<ul id="items-list">
-    {% for item in newest_items %}
-    {% if item.readed %}
-    <li class="readed">
-    {% else %}
-    <li>
-    {% end %}
-    <a href="/item/{{ item.itemid }}" class="detail">
-        <h3>{{ item.title }}</h3>
-        <p>{{ item.snippet[:50] }}...</p>
-    </a>
-    <span>{{ item.pubdate }} <a href="/feed/{{ item.feedid }}">{{ item.feed.feedname }}</a></span>
-    {% if admin_user %}
-    <form class="clearfix" method="post" action="/itemstatus">
-        <input type="hidden" name="itemid" value="{{ item.itemid }}">
+    {% if newest_items.count() > 0 %}
+    <ul id="items-list">
+        {% for item in newest_items %}
         {% if item.readed %}
-        <button type="submit" name="read" class="read">
-            <i class="fa fa-check-square-o fa-fw"></i>Mark as unread
-        </button>
+        <li class="readed">
         {% else %}
-        <button type="submit" name="read" class="read">
-            <i class="fa fa-square-o fa-fw"></i>Mark as readed
-        </button>
+        <li>
         {% end %}
-
-        {% if item.star %}
-        <button type="submit" name="star" class="star">
-            <i class="fa fa-star fa-fw"></i>Unstar
-        </button>
-        {% else %}
-        <button type="submit" name="star" class="star">
-            <i class="fa fa-star-o fa-fw"></i>Star
-        </button>
-        {% end %}
-    </form>
-    {% end %}
-    </li>
-    {% end %}
-    <!--
-    <li>
-        <a href="#" class="detail">
-            <h3>格瓦拉神话背后的黑色真相</h3>
-            <p>10 月 9 日，是切格瓦拉在玻利维亚就义的日子。每逢这个日子，有很多的纪念、致敬，也不缺少商业上的促销……</p>
+        <a href="/item/{{ item.itemid }}" class="detail">
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.snippet[:50] }}...</p>
         </a>
-            <span>2014 年 1 月 30 日 虎嗅网</span>
-        <b class="clearfix">
-            <a href="#" class="unread"><i class="fa fa-check-square-o fa-fw"></i>Mark as unread</a>
-            <a href="#" class="star"><i class="fa fa-star-o fa-fw"></i>Star</a>
-        </b>
-    </li>
-    -->
-</ul>
-{% if pagination.has_next %}
-<a href="?mode={{ viewmode }}&more={{ pagination.next_number }}" id="more-btn"><i class="fa fa-angle-double-down fa-fw"></i>View more</a>
-{% else %}
-<a href="?mode={{ viewmode }}&more={{ pagination.prev_number }}" id="more-btn" class="no-more"><i class="fa fa-arrow-left fa-fw"></i>No more, go back</a>
-{% end %}
+        <span>{{ item.pubdate }} <a href="/feed/{{ item.feedid }}">{{ item.feed.feedname }}</a></span>
+        {% if admin_user %}
+        <form class="clearfix" method="post" action="/itemstatus">
+            <input type="hidden" name="itemid" value="{{ item.itemid }}">
+            {% if item.readed %}
+            <button type="submit" name="read" class="read">
+                <i class="fa fa-check-square-o fa-fw"></i>Mark as unread
+            </button>
+            {% else %}
+            <button type="submit" name="read" class="read">
+                <i class="fa fa-square-o fa-fw"></i>Mark as readed
+            </button>
+            {% end %}
+
+            {% if item.star %}
+            <button type="submit" name="star" class="star">
+                <i class="fa fa-star fa-fw"></i>Unstar
+            </button>
+            {% else %}
+            <button type="submit" name="star" class="star">
+                <i class="fa fa-star-o fa-fw"></i>Star
+            </button>
+            {% end %}
+        </form>
+        {% end %}
+        </li>
+        {% end %}
+    </ul>
+    {% if pagination.has_next %}
+    <a href="?mode={{ viewmode }}&more={{ pagination.next_number }}" id="more-btn"><i class="fa fa-angle-double-down fa-fw"></i>View more</a>
+    {% else %}
+    <a href="?mode={{ viewmode }}&more={{ pagination.prev_number }}" id="more-btn" class="no-more"><i class="fa fa-arrow-left fa-fw"></i>No more, go back</a>
+    {% end %}
+    {% else %}
+    <p>No items yet.</p>
+    {% end %}
 {% end %}

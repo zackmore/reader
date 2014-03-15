@@ -89,9 +89,11 @@ class LoginHandler(BaseHandler):
         username = self.get_argument('username')
         password = self.get_argument('password')
 
+        enc_password = encrypt_password(username, password)
+
         result = self.db.query(Admin).\
                 filter_by(username=username).\
-                filter_by(password=password)
+                filter_by(password=enc_password)
 
         if result.count():
             self.set_secure_cookie('uid', str(result.one().userid))
@@ -127,9 +129,6 @@ class MainHandler(BaseHandler):
                             order_by(Item.pubdate.desc()).\
                             offset(pagination.start_point).\
                             limit(pagination.per_page)
-
-        if not newest_items.count():
-            raise tornado.web.HTTPError(404)
 
         current_feed = 0
 
@@ -215,20 +214,19 @@ class ItemHandler(BaseHandler):
 
 class StarHandler(BaseHandler):
     def get(self):
-        result = self.db.query(Item).\
+        newest_items = self.db.query(Item).\
                 filter_by(star=1).\
                 order_by(Item.pubdate.desc())
         
-        all_items_number = result.count()
+        all_items_number = newest_items.count()
         per_page = config.Index_per_page
         page_number = self.uri_query.more
         pagination = Pagination(page_number, all_items_number, per_page)
 
-        items = result.all()
         subpage = dict(type='star', url='/star', name='Star')
 
         self.render('list.html',
-                    newest_items=items,
+                    newest_items=newest_items,
                     pagination=pagination,
                     current_feed=0,
                     subpage=subpage,

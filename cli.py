@@ -8,7 +8,9 @@ import subprocess
 
 from sqlalchemy.orm import scoped_session, sessionmaker
 
+from config import *
 from model import *
+from feedfetcher import *
 
 documentation = {}
 
@@ -24,6 +26,9 @@ documentation['init'] = '''
 '''
 
 documentation['fetch'] = '''
+'''
+
+documentation['update'] = '''
 '''
 
 documentation['server'] = '''
@@ -45,7 +50,8 @@ def main():
     elif command == 'init':
         Base.metadata.create_all(engine)
 
-        admin = Admin(username='admin', password='admin')
+        admin = Admin(username=Admin_username,
+                    password=encrypt_password(Admin_username, Admin_password))
         session.add(admin)
         session.commit()
     elif command == 'fetch':
@@ -58,6 +64,18 @@ def main():
             dumper.parse_feed()
             dumper.parse_items()
             dumper.save_to_db()
+    elif command == 'update':
+        feeds = session.query(Feed)
+        if feeds.count():
+            feeds = feeds.all()
+            for feed in feeds:
+                tmp_dumper = Fetcher(feed.feedurl)
+                tmp_dumper.parse_feed()
+                tmp_dumper.parse_items()
+                tmp_dumper.save_to_db()
+        else:
+            print 'No feeds now, please fetch some.'
+            return
     elif command == 'server':
         subprocess.call(['python', 'server.py'])
 

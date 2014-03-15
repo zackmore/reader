@@ -355,6 +355,12 @@ header a{
     margin: 0 10px;
 }
 
+#sidebar p{
+    color: #fff;
+    padding: 0 1em;
+    margin: 0 0 1em;
+}
+
 #sidebar form{
     margin: 0 12px;
 }
@@ -378,7 +384,7 @@ header a{
 #sidebar input[type="submit"]{
     float: right;
     padding: 0 10px;
-    margin: 1.5em 0 1em;
+    margin: 0;
     height: 2.125em;
     line-height: 2.125;
     font: 1em/1 Helvetica, Arial, sans-serif;

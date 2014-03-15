@@ -1,8 +1,11 @@
+# coding: utf-8
+
 import sys
 import os.path
 import json
 import datetime
 import time
+import hashlib
 
 from tornado.ioloop import PeriodicCallback
 
@@ -43,6 +46,10 @@ def parse_time(value):
     except ValueError as e:
         print('Unrecorgnized time format. Error: %s' % e)
         sys.exit()
+
+def encrypt_password(username, password):
+    return hashlib.sha1(str(username)+str(password)).hexdigest()
+
 
 
 class QueryParser(object):
