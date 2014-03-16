@@ -7,8 +7,8 @@ import tornado.options
 
 from model import *
 from helper import *
+from feedfetcher import *
 
-import feedfetcher
 import config
 
 from tornado.ioloop import PeriodicCallback
@@ -27,6 +27,7 @@ class Application(tornado.web.Application):
             (r'/logout', LogoutHandler),
 
             (r'/itemstatus', ItemStatusHandler),
+            (r'/addfeed', AddFeedHandler),
         ]
         settings = dict(
             template_path=os.path.join(os.path.dirname(__file__),
@@ -266,6 +267,22 @@ class ItemStatusHandler(BaseHandler):
 
         self.redirect(self.request.headers.get('referer', '/'))
 
+
+class AddFeedHandler(BaseHandler):
+    @tornado.web.authenticated
+    def post(self):
+        new_feedurl = self.get_argument('newfeed')
+
+        result = self.db.query(Feed).filter_by(feedurl=new_feedurl)
+        if result.count():
+            pass
+        else:
+            dumper = Fetcher(new_feedurl)
+            dumper.parse_feed()
+            dumper.parse_items()
+            dumper.save_to_db()
+
+        self.redirect('/')
     
 
 if __name__ == '__main__':

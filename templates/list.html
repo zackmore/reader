@@ -10,7 +10,13 @@
         {% end %}
         <a href="/item/{{ item.itemid }}" class="detail">
             <h3>{{ item.title }}</h3>
-            <p>{{ item.snippet[:50] }}...</p>
+            <p>
+            {% if len(item.snippet) > 100 %}
+                {% raw item.snippet[:100] %}...
+            {% else %}
+                {% raw item.snippet %}
+            {% end %}
+            </p>
         </a>
         <span>{{ item.pubdate }} <a href="/feed/{{ item.feedid }}">{{ item.feed.feedname }}</a></span>
         {% if admin_user %}
