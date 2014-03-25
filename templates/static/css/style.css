@@ -297,7 +297,6 @@ header a{
 }
 
 #toolbar #crumb .page{
-    display: none;
     float: right;
     color: #b3b3b3;
 }

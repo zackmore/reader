@@ -49,7 +49,9 @@
     {% if pagination.has_next %}
     <a href="?mode={{ viewmode }}&more={{ pagination.next_number }}" id="more-btn"><i class="fa fa-angle-double-down fa-fw"></i>View more</a>
     {% else %}
+        {% if pagination.page_number > 1 %}
     <a href="?mode={{ viewmode }}&more={{ pagination.prev_number }}" id="more-btn" class="no-more"><i class="fa fa-arrow-left fa-fw"></i>No more, go back</a>
+        {% end %}
     {% end %}
     {% else %}
     <p>No items yet.</p>
